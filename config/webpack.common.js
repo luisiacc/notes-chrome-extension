@@ -1,5 +1,8 @@
 'use strict';
 
+const path = require('path');
+const webpack = require('webpack');
+
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
@@ -33,6 +36,12 @@ const common = {
         test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /(node_modules|bower_components)/,
+        loader: 'babel-loader',
+        options: { presets: ['@babel/env'] },
+      },
       // Check for images imported in .js files and
       {
         test: IMAGE_TYPES,
@@ -48,6 +57,7 @@ const common = {
       },
     ],
   },
+  resolve: { extensions: ["*", ".js", ".jsx"] },
   plugins: [
     // Copy static assets from `public` folder to `build` folder
     new CopyWebpackPlugin({
