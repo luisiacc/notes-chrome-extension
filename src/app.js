@@ -1,9 +1,10 @@
 import * as React from 'react';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {
   debouncedSyncWithStorage,
   emptyItem,
   getFromStorage,
-  saveToStorage,
   syncWithStorage,
 } from './utils';
 
@@ -24,14 +25,14 @@ export default function App() {
     }
   }
 
-  function handleChangeContent(item) {
+  function handleChangeItem(item, debounce = true) {
     const newItems = items.map((i) => {
       if (i.id === item.id) {
         return item;
       }
       return i;
     });
-    save(newItems);
+    save(newItems, debounce);
   }
 
   const selectedItem = items.find((i) => i.id === selectedItemId);
@@ -44,13 +45,14 @@ export default function App() {
           className="my-2"
           onClick={() => save([...items, emptyItem()], false)}
         >
-          + Add note
+          <AddIcon /> Add note
         </Button>
       </div>
       <div className="h-max flex-col ">
         <TheList
           items={items}
           selected={selectedItemId}
+          onSave={(item) => handleChangeItem(item, false)}
           onClick={(item) => setSelectedItem(item.id)}
           onDelete={(oldItem) =>
             save(
@@ -62,7 +64,7 @@ export default function App() {
         <ItemContent
           key={selectedItemId}
           item={selectedItem}
-          onChange={handleChangeContent}
+          onChange={handleChangeItem}
         />
       </div>
     </div>
@@ -74,27 +76,54 @@ function Button(props) {
     <button
       {...props}
       className={
-        'bg-slate-700 py-1 px-4 rounded-2xl hover:bg-slate-900 ' +
-        (props.className ?? '')
+        (props.className ?? '') +
+        ' bg-slate-700 py-1 px-4 rounded-2xl hover:bg-slate-900 '
       }
     />
   );
 }
 
-function TheList({ items, selected, onClick, onDelete }) {
+function TheList({ items, selected, onSave, onClick, onDelete }) {
+  const [editing, setEditing] = React.useState(null);
+
   return (
     <div className="bg-slate-500 min-h-max h-64 flex flex-col overflow-y-auto scrollbar-hide">
       {items.map((item) => (
         <div
           key={item.id}
           className={
-            'flex flex-row justify-between py-2 px-2 cursor-pointer hover:bg-slate-400 ' +
+            'flex flex-row align-items-center justify-between py-2 px-2 cursor-pointer hover:bg-slate-400 ' +
             (item.id == selected ? 'bg-slate-400' : '')
           }
+          onDoubleClick={() => setEditing(item.id)}
           onClick={() => onClick(item)}
         >
-          <span> {item.title}</span>
-          <Button onClick={() => onDelete(item)}>-</Button>
+          <span className="flex content-center flex-wrap">
+            {' '}
+            {editing == item.id ? (
+              <form
+                onSubmit={(evt) => {
+                  evt.preventDefault();
+                  setEditing(null);
+                }}
+              >
+                <input
+                  onBlur={() => setEditing(null)}
+                  name="title"
+                  className="form-control bg-slate-500 text-slate-100 border-0 focus:outline-none focus:px-2 rounded"
+                  value={item.title}
+                  onChange={(evt) =>
+                    onSave({ ...item, title: evt.target.value })
+                  }
+                />
+              </form>
+            ) : (
+              item.title
+            )}
+          </span>
+          <Button onClick={() => onDelete(item)} className="text-sm px-2 py-1 flex content-center">
+            <DeleteIcon sx={{fontSize: "1.1em"}} />
+          </Button>
         </div>
       ))}
     </div>
