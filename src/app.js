@@ -118,8 +118,9 @@ function NoteItem({ i, onSave, onClick, onDelete, item, selected }) {
       }
       onClick={() => onClick(item)}
     >
-      <span className="flex content-center flex-wrap">
+      <span className="flex content-center flex-wrap flex-grow ">
         <form
+          className="w-full"
           onSubmit={(evt) => {
             evt.preventDefault();
             setEditing(false);
@@ -131,7 +132,7 @@ function NoteItem({ i, onSave, onClick, onDelete, item, selected }) {
             ref={ref}
             onBlur={() => setEditing(false)}
             name="title"
-            className="form-control bg-inherit text-gray-700 border-0 focus:outline-none rounded cursor-pointer focus:cursor-text focus:border-b-2 focus:border-sky-700"
+            className="form-control w-full bg-inherit text-ellipsis text-gray-700 border-0 focus:outline-none rounded cursor-pointer focus:cursor-text focus:border-b-2 focus:border-sky-700"
             value={item.title}
             onChange={(evt) => onSave({ ...item, title: evt.target.value })}
           />

@@ -10,7 +10,7 @@ html {
 }
 
 body {
-  min-width: 400px;
+  min-width: 500px;
   min-height: 600px;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
