@@ -4,7 +4,7 @@ export function syncWithStorage(items) {
   chrome.storage.local.set({ [KEY]: items });
 }
 
-export const debouncedSyncWithStorage = debounce(syncWithStorage, 5000);
+export const debouncedSyncWithStorage = debounce(syncWithStorage, 2000);
 
 export function getFromStorage() {
   return new Promise((resolve, reject) => {
