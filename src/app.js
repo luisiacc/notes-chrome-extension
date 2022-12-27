@@ -163,10 +163,10 @@ function NoteItem({ i, onSave, onClick, onDelete, item, selected }) {
 
 function ItemContent({ item, onChange }) {
   return (
-    <div className="bg-sky-100 overflow-y-auto min-h-max h-80 scrollbar-hide border-t border-sky-200">
+    <div className="bg-sky-100 overflow-y-auto min-h-full h-80 scrollbar-hide border-t border-sky-200 overflow-visible">
       <textarea
         disabled={!item}
-        className="form-control py-1 px-2 w-full bg-sky-100 h-full focus:outline-none text-gray-700 overflow-y-none"
+        className="form-control py-1 px-2 w-full bg-sky-100 h-full focus:outline-none text-gray-700"
         style={{ resize: "none" }}
         placeholder={item ? "Enter your note content here" : "Select a note to edit"}
         value={item?.content ?? ""}
