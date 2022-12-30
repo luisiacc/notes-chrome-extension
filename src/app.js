@@ -3,7 +3,7 @@ import AddIcon from "@mui/icons-material/Add";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
+import autoAnimate from "@formkit/auto-animate";
 import { debouncedSyncWithStorage, emptyItem, getFromStorage, syncWithStorage } from "./utils";
 
 export default function App() {
@@ -74,7 +74,13 @@ function Button(props) {
 }
 
 function TheList({ items, selected, onSave, onClick, onDelete }) {
-  const [parent] = useAutoAnimate();
+  const parent = React.useRef(null);
+
+  React.useEffect(() => {
+    if (parent.current && items.length > 0) {
+      autoAnimate(parent.current);
+    }
+  }, [items]);
 
   return (
     <div ref={parent} className="bg-sky-100 min-h-max h-64 flex flex-col overflow-y-auto scrollbar-hide">
